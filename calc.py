@@ -1,3 +1,8 @@
+# Nicholas Jacobs
+# UMaine COS 301 - Programming Languages
+# HW1
+
+# This code is a derivation of:
 #-------------------------------------------------------------
 # Example from PLY docs.
 # calc.py
@@ -5,11 +10,6 @@
 # A simple calculator with variables.  This is from O'Reilly's
 # "Lex and Yacc", p. 63.
 #-------------------------------------------------------------
-
-import sys
-sys.path.insert(0, "../..")
-if sys.version_info[0] >=3:
-    raw_input = input
 
 # This defines non-literal tokens
 # the tokens
@@ -111,14 +111,13 @@ def p_error(p):
 
 import ply.yacc as yacc
 yacc.yacc()
-while 1:
-    try:
-        s = raw_input('calc > ')  # prints prompt and get user input
-    except EOFError:
-        break
-    if not s:
-        continue
-    yacc.parse(s)
 
-
-
+if __name__ == "__main__":
+    while 1:
+        try:
+            s = input('calc > ')  # prints prompt and get user input
+        except EOFError:
+            break
+        if not s:
+            continue
+        yacc.parse(s)
