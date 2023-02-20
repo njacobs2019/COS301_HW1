@@ -33,6 +33,7 @@ while(i < len(tests)):
         # This is a comment in the input file
         case = case.replace("#","")
         case = case.strip()
+        print("\n"*1)
         print(f"***{case}***")
         i+=1
     else:
@@ -55,4 +56,4 @@ while(i < len(tests)):
             exit(1)
         i+=3
 
-print("All tests passed!!")
+print("\n\nAll tests passed!!")

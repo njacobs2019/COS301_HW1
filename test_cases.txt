@@ -1,7 +1,20 @@
-# Standard tests
+# Testing add, sub, divide, multiply, parenthesis
 %%
 2 + 3
 5
+%%
+10-9
+1
+%%
+10*78
+780
+%%
+550/11
+50.0
+%%
+(1+3)*8
+32
+## Testing assignment
 %%
 hello = (2 + 3) * 7
 
@@ -14,3 +27,16 @@ y
 %%
 hello
 35
+## Testing mod
+%%
+12 % 5
+2
+%%
+563%3
+2
+%%
+-7 % 6
+5
+%%
+6%18
+6
