@@ -116,6 +116,7 @@ if __name__ == "__main__":
     while 1:
         try:
             s = input('calc > ')  # prints prompt and get user input
+            print(f"Input was*{s}*")
         except EOFError:
             break
         if not s:
