@@ -1,0 +1,16 @@
+# Standard tests
+%%
+2 + 3
+5
+%%
+hello = (2 + 3) * 7
+
+%%
+y = 4 * hello + 3
+
+%%
+y
+143
+%%
+hello
+35
