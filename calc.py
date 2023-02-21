@@ -17,7 +17,7 @@ tokens = ('NAME', 'NUMBER', 'DIV')
 
 # This defines literal tokens
 # simple tokens
-literals = ['=', '+', '-', '*', '/', '(', ')', '%']
+literals = ['=', '+', '-', '*', '/', '(', ')', '%', ',']
 
 # tokens
 # REGEX of what defines a name
@@ -121,8 +121,7 @@ yacc.yacc()
 if __name__ == "__main__":
     while 1:
         try:
-            s = input('calc > ')  # prints prompt and get user input
-            print(f"Input was*{s}*")
+            s = input('')  # prints prompt and get user input
         except EOFError:
             break
         if not s:
