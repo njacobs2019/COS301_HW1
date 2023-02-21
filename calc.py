@@ -56,7 +56,6 @@ precedence = (  ('left', '+', '-'),   # lowest precedence
                 ('left', '*', '/', '%', 'DIV'),
                 ('right', 'UMINUS'))  # highest
 
-
 # dictionary of names
 names = {}
 
@@ -158,6 +157,14 @@ def p_expression_group(p):
 def p_expression_number(p):
     "s_expression : NUMBER"
     p[0] = p[1]
+
+def p_vec_name(p):
+    "vec : NAME"
+    try:
+        p[0] = names[p[1]]
+    except LookupError:
+        print("Undefined name '%s'" % p[1])
+        p[0]=0
 
 def p_expression_name(p):
     "s_expression : NAME"
