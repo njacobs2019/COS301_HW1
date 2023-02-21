@@ -13,7 +13,7 @@
 
 # This defines non-literal tokens
 # the tokens
-tokens = ('NAME', 'NUMBER')
+tokens = ('NAME', 'NUMBER', 'DIV')
 
 # This defines literal tokens
 # simple tokens
@@ -23,6 +23,8 @@ literals = ['=', '+', '-', '*', '/', '(', ')', '%']
 # REGEX of what defines a name
 # objects that start with t_ are special
 t_NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'  # needs to have this name to match the tokens list
+
+t_DIV = r'//'
 
 # The docstring defines the REGEX that corresponds to the token
 def t_NUMBER(t):
@@ -49,7 +51,7 @@ lex.lex()
 
 # left and right means evaluate going from that direction
 precedence = (  ('left', '+', '-'),   # lowest precedence
-                ('left', '*', '/', '%'),
+                ('left', '*', '/', '%', 'DIV'),
                 ('right', 'UMINUS'))  # highest
 
 
@@ -70,7 +72,8 @@ def p_expression_binop(p):
                   | expression '-' expression
                   | expression '*' expression
                   | expression '/' expression
-                  | expression '%' expression'''
+                  | expression '%' expression
+                  | expression DIV expression'''
     # LHS is at position 0, then increments from there
     if p[2] == '+':
         p[0] = p[1]+p[3]
@@ -82,6 +85,9 @@ def p_expression_binop(p):
         p[0] = p[1]/p[3]
     elif p[2] == '%':
         p[0] = p[1]%p[3]
+    elif p[2] == '//':
+        p[0] = p[1]//p[3]
+    
 
 def p_expression_uminus(p):
     "expression : '-' expression %prec UMINUS"
