@@ -10,6 +10,9 @@
 # A simple calculator with variables.  This is from O'Reilly's
 # "Lex and Yacc", p. 63.
 #-------------------------------------------------------------
+from vector import vector
+import ply.lex as lex
+import ply.yacc as yacc
 
 # This defines non-literal tokens
 # the tokens
@@ -44,7 +47,6 @@ def t_error(t):
     t.lexer.skip(1)
 
 # Build lexer
-import ply.lex as lex
 lex.lex()
 
 # Parsing rules
@@ -59,21 +61,78 @@ precedence = (  ('left', '+', '-'),   # lowest precedence
 names = {}
 
 # p_ is special
+def p_statement_assign_s(p):
+    'statement : NAME "=" s_expression'
+    names[p[1]] = p[3]
+
+def p_statement_expr_s(p):
+    'statement : s_expression'
+    print(p[1])
+
 def p_statement_assign(p):
-    'statement : NAME "=" expression'
+    'statement : NAME "=" vec'
     names[p[1]] = p[3]
 
 def p_statement_expr(p):
-    'statement : expression'
+    'statement : vec'
     print(p[1])
 
+def p_vec_binop(p):
+    '''vec : vec "+" vec
+           | vec "-" vec
+           | vec "*" vec
+           | vec "/" vec
+           | vec "%" vec
+           | vec DIV vec'''
+    if p[2] == "+":
+        p[0] = p[1].add(p[3])
+    elif p[2] == "-":
+        p[0] = p[1].subtract(p[3])
+    elif p[2] == "*":
+        p[0] = p[1].multiply(p[3])
+    elif p[2] == "/":
+        p[0] = p[1].divide(p[3])
+    elif p[2] == "%":
+        p[0] = p[1].mod(p[3])
+    elif p[2] == "//":
+        p[0] = p[1].div(p[3])
+
+def p_vec_uminus(p):
+    "vec : '-' vec %prec UMINUS"
+    p[0] = p[2].negate()
+
+def p_vec_group(p):
+    "vec : '(' vec ')'"
+    p[0] = p[2]
+
+def p_vec_empty(p):
+    "vec : '(' ')'"
+    p[0] = vector()
+
+def p_vec_end1(p):
+    "vec : Lvec s_expression ')'"
+    p[0] = p[1].append(p[2])
+
+def p_vec_end2(p):
+    "vec : Lvec ')'"
+    p[0] = p[1]
+
+#Left vector
+def p_vec_start(p):
+    "Lvec : '(' s_expression ','"
+    p[0] = vector([p[2]])
+
+def p_vec_continue(p):
+    "Lvec : Lvec s_expression ','"
+    p[0] = p[1].append(p[2])
+
 def p_expression_binop(p):
-    '''expression : expression '+' expression
-                  | expression '-' expression
-                  | expression '*' expression
-                  | expression '/' expression
-                  | expression '%' expression
-                  | expression DIV expression'''
+    '''s_expression : s_expression '+' s_expression
+                  | s_expression '-' s_expression
+                  | s_expression '*' s_expression
+                  | s_expression '/' s_expression
+                  | s_expression '%' s_expression
+                  | s_expression DIV s_expression'''
     # LHS is at position 0, then increments from there
     if p[2] == '+':
         p[0] = p[1]+p[3]
@@ -87,22 +146,21 @@ def p_expression_binop(p):
         p[0] = p[1]%p[3]
     elif p[2] == '//':
         p[0] = p[1]//p[3]
-    
 
 def p_expression_uminus(p):
-    "expression : '-' expression %prec UMINUS"
+    "s_expression : '-' s_expression %prec UMINUS"
     p[0] = -p[2]
 
 def p_expression_group(p):
-    "expression : '(' expression ')'"
+    "s_expression : '(' s_expression ')'"
     p[0] = p[2]
 
 def p_expression_number(p):
-    "expression : NUMBER"
+    "s_expression : NUMBER"
     p[0] = p[1]
 
 def p_expression_name(p):
-    "expression : NAME"
+    "s_expression : NAME"
     try:
         p[0] = names[p[1]]
     except LookupError:
@@ -115,7 +173,6 @@ def p_error(p):
     else:
         print("Syntax error at EOF")
 
-import ply.yacc as yacc
 yacc.yacc()
 
 if __name__ == "__main__":
