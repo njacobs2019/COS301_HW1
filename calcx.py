@@ -11,6 +11,7 @@
 # "Lex and Yacc", p. 63.
 #-------------------------------------------------------------
 import sys
+import arithmetic as arm
 import ply.lex as lex
 import ply.yacc as yacc
 
@@ -78,28 +79,21 @@ def p_expression_binop(p):
     # Need to make sure it checks the types of the variables
     # LHS is at position 0, then increments from there
     if p[2] == '+':
-        # p[0] = p[1]+p[3]
-        pass
+        p[0] = arm.add(p[1],p[3])
     elif p[2] == '-':
-        # p[0] = p[1]-p[3]
-        pass
+        p[0] = arm.subtract(p[1],p[3])
     elif p[2] == '*':
-        # p[0] = p[1]*p[3]
-        pass
+        p[0] = arm.multiply(p[1],p[3])
     elif p[2] == '/':
-        # p[0] = p[1]/p[3]
-        pass
+        p[0] = arm.divide(p[1],p[3])
     elif p[2] == '%':
-        # p[0] = p[1]%p[3]
-        pass
+        p[0] = arm.mod(p[1],p[3])
     elif p[2] == '//':
-        # p[0] = p[1]//p[3]
-        pass
+        p[0] = arm.div(p[1],p[3])
 
 def p_expression_uminus(p):
     "expression : '-' expression %prec UMINUS"
-    # p[0] = -p[2]
-    pass
+    p[0] = arm.negate(p[2])
 
 def p_expression_group(p):
     "expression : '(' expression ')'"
