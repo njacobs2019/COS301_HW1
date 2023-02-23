@@ -17,6 +17,7 @@ vec : vec "+" vec
     | "(" ")"                        # Empty list
     | Lvec s_expression ")"
     | Lvec ")"
+    | NAME
 
 # Left Vector
 Lvec : "(" s_expression ","
