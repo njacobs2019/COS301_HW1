@@ -1,6 +1,6 @@
 import io
 import sys
-import calc
+import calcx
 
 def test_input(sentence):
     # Create an in-memory file object to capture standard output
@@ -10,7 +10,7 @@ def test_input(sentence):
     sys.stdout = output
 
     # Call the function with the desired input
-    calc.yacc.parse(sentence)
+    calcx.yacc.parse(sentence)
 
     # Restore standard output
     sys.stdout = sys.__stdout__
