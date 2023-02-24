@@ -1,5 +1,5 @@
 # About PLY Calcx
-This was completed for a homework assignment for UMaine's Programming Languages class COS 301.  It uses the PLY library (Python Lex Yacc) to specify how to tokenize and parse input from standard input, then executes the calculations for a standard calculator with the running Python instance.  PLY is a Python alternative to Lex and Yacc (Yet another compiler compiler) which are the Unix alternatives to the more popular [GNU Flex](https://www.gnu.org/software/flex/) and [GNU Bison](https://www.gnu.org/software/bison/).  Flex is a lexical analyzer for tokenizing input and Bison is a parser generator.
+PLY Calcx was written by Nicholas Jacobs.  This was completed for a homework assignment for UMaine's Programming Languages class COS 301.  It uses the PLY library (Python Lex Yacc) to specify how to tokenize and parse input from standard input, then executes the calculations for a standard calculator with the running Python instance.  PLY is a Python alternative to Lex and Yacc (Yet another compiler compiler) which are the Unix alternatives to the more popular [GNU Flex](https://www.gnu.org/software/flex/) and [GNU Bison](https://www.gnu.org/software/bison/).  Flex is a lexical analyzer for tokenizing input and Bison is a parser generator.
 
 # Installation
 This program was developed in the Anaconda distribution of Python 3.9.
