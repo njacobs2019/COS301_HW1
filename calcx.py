@@ -1,48 +1,35 @@
-# Nicholas Jacobs
-# UMaine COS 301 - Programming Languages
-# HW1
-
-# This code is a derivation of:
-#-------------------------------------------------------------
-# Example from PLY docs.
-# calc.py
-# 
-# A simple calculator with variables.  This is from O'Reilly's
-# "Lex and Yacc", p. 63.
-#-------------------------------------------------------------
-import sys
-import arithmetic as arm
 import ply.lex as lex
 import ply.yacc as yacc
+import arithmetic as arm
 
-# This defines non-literal tokens
-# the tokens
+# Non-literal token definitions
 tokens = ('NAME', 'NUMBER', 'DIV')
 
-# This defines literal tokens
-# simple tokens
+# Literal token definitions
 literals = ['=', '+', '-', '*', '/', '(', ')', '%', ',']
 
-# tokens
-# REGEX of what defines a name
-# objects that start with t_ are special
-t_NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'  # needs to have this name to match the tokens list
+# Regular expression of what defines a name
+t_NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
 
+# Regular expression of what defines DIV operator
 t_DIV = r'//'
 
-# The docstring defines the REGEX that corresponds to the token
+# Definition of a number
+# The docstring defines the regular expression that corresponds to the token
 def t_NUMBER(t):
     r'\d+'
-    t.value = int(t.value)   # originally set to part of input string that matches the regex
+    t.value = int(t.value)
     return t
 
+# Characters to ignore
 t_ignore = " \t"
 
+# Definition of newline
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += t.value.count("\n")   # helps for reporting syntax errors
 
-# for skipping over illegal characters
+# For skipping over illegal characters
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
@@ -51,24 +38,26 @@ def t_error(t):
 lex.lex()
 
 # Parsing rules
-
 # left and right means evaluate going from that direction
-precedence = (  ('left', '+', '-'),   # lowest precedence
+precedence = (  ('left', '+', '-'),                # lowest precedence
                 ('left', '*', '/', '%', 'DIV'),
-                ('right', 'UMINUS'))  # highest
+                ('right', 'UMINUS'))               # highest precedence
 
-# dictionary of names
+# Dictionary of names
+# This stores variable assignment during execution to memory
 names = {}
 
-# p_ is special
+# Grammar and logic for assignment
 def p_statement_assign(p):
     'statement : NAME "=" expression'
     names[p[1]] = p[3]
 
+# Grammar and logic for identity of expressions
 def p_statement_expr(p):
     'statement : expression'
     print(p[1])
 
+# Grammar and logic for binary operations
 def p_expression_binop(p):
     '''expression : expression '+' expression
                   | expression '-' expression
@@ -91,18 +80,22 @@ def p_expression_binop(p):
     elif p[2] == '//':
         p[0] = arm.div(p[1],p[3])
 
+# Grammar and logic for negation
 def p_expression_uminus(p):
     "expression : '-' expression %prec UMINUS"
     p[0] = arm.negate(p[2])
 
+# Grammar and logic for grouping with parenthesis
 def p_expression_group(p):
     "expression : '(' expression ')'"
     p[0] = p[2]
 
+# Grammar and logic for parsing a number
 def p_expression_number(p):
     "expression : NUMBER"
     p[0] = p[1]
 
+# Grammar and logic for parsing a variable name
 def p_expression_name(p):
     "expression : NAME"
     try:
@@ -111,46 +104,58 @@ def p_expression_name(p):
         print("Undefined name '%s'" % p[1])
         p[0]=0
 
+# Grammar and logic for converting vector/list to expression
 def p_expression_vec(p):
     "expression : vec"
     p[0] = p[1]
 
 # Vector/list productions
+
+# Grammar and logic for empty vectors
 def p_vec_empty(p):
     "vec : '(' ')'"
     p[0] = tuple()
 
+# Grammar and logic for terminating a vector
 def p_vec_end1(p):
     "vec : Lvec expression ')'"
     assert isinstance(p[1],tuple), "List must be a tuple"
     assert isinstance(p[2], int) or isinstance(p[2],float), "Lists can only contain ints and floats"
     p[0] = p[1] + (p[2],)
 
+# Grammar and logic for terminating a vector
 def p_vec_end2(p):
     "vec : Lvec ')'"
     assert isinstance(p[1],tuple), "List must be a tuple"
     p[0] = p[1]
 
 #Left vector
+# Beginning of vector before it terminates
+
+# Grammar and logic for starting a vector
 def p_vec_start(p):
     "Lvec : '(' expression ','"
     assert isinstance(p[2], int) or isinstance(p[2],float), "Lists can only contain ints and floats"
     p[0] = (p[2],)
 
+# Grammar and logic for continuing a vector
 def p_vec_continue(p):
     "Lvec : Lvec expression ','"
     assert isinstance(p[1],tuple), "List must be a tuple"
     assert isinstance(p[2], int) or isinstance(p[2],float), "Lists can only contain ints and floats"
     p[0] = p[1] + (p[2],)
 
+# Grammar and logic for syntax errors
 def p_error(p):
     if p:
         print(f"Syntax error at {p.value}")
     else:
         print("Syntax error at EOF")
 
+# Create the parser
 yacc.yacc()
 
+# Loop for user input
 if __name__ == "__main__":
     while True:
         try:

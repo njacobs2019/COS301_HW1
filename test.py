@@ -2,6 +2,7 @@ import io
 import sys
 import calcx
 
+# Passes test case to calcx and returns output as a string
 def test_input(sentence):
     # Create an in-memory file object to capture standard output
     output = io.StringIO()
@@ -19,6 +20,7 @@ def test_input(sentence):
     output_str = output.getvalue()
     return output_str.strip()
 
+# Opens and reads in the test cases
 with open('test_cases.txt') as f:
     tests = f.readlines()
 
@@ -26,6 +28,7 @@ with open('test_cases.txt') as f:
 for i in range(len(tests)):
     tests[i] = tests[i].strip()
 
+# Loop over the test cases
 i=0  # index into sample_out
 while(i < len(tests)):
     case = tests[i]
