@@ -32,6 +32,7 @@ PLY Calcx only supports operations between two scalars or two lists of equal len
 - Modulo (%)
 - Negation (-)
 - Associativity of scalar and list operations with parenthesis
+- Assignment (variable = scalar or list)
 
 # Testing
 To test the program run `test.py` which runs the test cases from `test_cases.txt`.
@@ -40,28 +41,27 @@ To test the program run `test.py` which runs the test cases from `test_cases.txt
 # BNF Grammar
 Here is the formal grammar for the calculator program:
 ```
-statement : NAME "=" expression
-          | expression
+<statement> ::= <name> "=" <expression>
+             |  <expression>
 
-expression : expression "+" expression
-           | expression "-" expression
-           | expression "*" expression
-           | expression "/" expression
-           | expression "%" expression
-           | expression DIV expression
-           | "-" expression                    # High precedence
-           | "(" expression ")"
-           | NUMBER
-           | NAME
-           | vec
+<expression> ::= <expression> "+" <expression>
+              |  <expression> "-" <expression>
+              |  <expression> "*" <expression>
+              |  <expression> "/" <expression>
+              |  <expression> "%" <expression>
+              |  <expression> "//" <expression>
+              |  "-" <expression>
+              |  "(" <expression> ")"
+              |  <number>
+              |  <name>
+              |  <vec>
 
-vec : "(" ")"                        # Empty list
-    | Lvec expression ")"
-    | Lvec ")"
+<vec> ::= "(" ")"
+       |  <lvec> <expression> ")"
+       |  <lvec> ")"
 
-# Left Vector
-Lvec : "(" expression ","
-     | Lvec expression ","
+<lvec> ::= "(" <expression> ","
+        |  <lvec> <expression> ","
 
 ```
 
